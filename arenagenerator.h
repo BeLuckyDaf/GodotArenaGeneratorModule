@@ -14,6 +14,8 @@ private:
     int rate;
     int iterations;
     int mirror_iterations;
+	int death_threshold;
+	int birth_threshold;
 
     void generate_random();
     int apply_rules(
@@ -26,7 +28,7 @@ private:
         const int b,
         const int bl,
         const int l
-   );
+	);
     void mirror(bool vertical);
     void simulate(const int n);
     int get_point(const int x, const int y) const;
@@ -41,9 +43,11 @@ public:
         const int iterations,
         const int rate,
         const int mirror_iterations
-   );
+    );
+	
+	void set_thresholds(const int b, const int d);
+	
     ArenaGenerator();
-    ~ArenaGenerator();
 };
 
 #endif	// ARENAGENERATOR_H

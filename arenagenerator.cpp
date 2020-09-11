@@ -2,9 +2,11 @@
 #include <random>
 #include <stdio.h>
 
-ArenaGenerator::ArenaGenerator() {}
-
-ArenaGenerator::~ArenaGenerator() {}
+ArenaGenerator::ArenaGenerator() 
+{
+	death_threshold = 3;
+	birth_threshold = 5;
+}
 
 Array ArenaGenerator::generate(
         const int width,
@@ -65,8 +67,8 @@ int ArenaGenerator::apply_rules(
 )
 {
     int sum = tl + t + tr + r + br + b + bl + l;
-    if (c == 0 && sum >= 5) return 1;
-    else if (c == 1 && sum <= 3) return 0;
+    if (c == 0 && sum >= birth_threshold) return 1;
+    else if (c == 1 && sum <= death_threshold) return 0;
     return c;
 }
 
@@ -105,23 +107,38 @@ void ArenaGenerator::simulate(const int n)
     }
 }
 
-void ArenaGenerator::mirror(bool vertical) {
-    if (vertical) {
-        for (int y = 0; y < height/2; y++) {
-            for (int x = 0; x < width; x++) {
+void ArenaGenerator::mirror(bool vertical) 
+{
+    if (vertical) 
+	{
+        for (int y = 0; y < height/2; y++) 
+		{
+            for (int x = 0; x < width; x++) 
+			{
                 map[(height - y - 1) * width + x] = map[y * width + x];
             }
         }
-    } else {
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width/2; x++) {
+    } 
+	else 
+	{
+        for (int y = 0; y < height; y++) 
+		{
+            for (int x = 0; x < width/2; x++) 
+			{
                 map[y * width + (width - x - 1)] = buffer[y * width + x];
             }
         }
     }
-}	
+}
+
+void ArenaGenerator::set_thresholds(const int b, const int d) 
+{
+	birth_threshold = b;
+	death_threshold = d;
+}
 
 void ArenaGenerator::_bind_methods()
 {
     ClassDB::bind_method(D_METHOD("generate", "width", "height", "iterations", "rate", "mirror_iterations"), &ArenaGenerator::generate);
+	ClassDB::bind_method(D_METHOD("set_thresholds", "b", "d"), &ArenaGenerator::set_thresholds);
 }
